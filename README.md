@@ -4,6 +4,8 @@ This Discord bot allows specific whitelisted users to send private messages (DMs
 
 ---
 
+if you get `No module named 'audioop'` then do 
+
 ## Features
 
 - **Whitelist-Based Access:** Only users with their IDs in the whitelist can use the `+dmall` command.
@@ -19,6 +21,7 @@ This Discord bot allows specific whitelisted users to send private messages (DMs
 
 1. Python 3.8 or higher
 2. `discord.py` library
+3. If you get the error message `No module named 'audioop'` then `pip install audioop-lts`
 
 Install the library using pip:
 ```bash
