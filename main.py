@@ -56,7 +56,7 @@ async def dmall(ctx, *, message):
 
         await status_message.edit(content=f"DM process completed! {sent_count}/{total_members} messages sent")
     else:
-        await ctx.send("You are not authorized to use this command.")
+        await ctx.send("You are not authorised to use this command!")
 
 @bot.command(name="customhelp")
 async def help_command(ctx):
