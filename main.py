@@ -43,7 +43,6 @@ async def dmall(ctx, *, message):
                     await member.send(message)
                     sent_count += 1
                     await status_message.edit(content=f"DMing in progress... {sent_count}/{total_members} messages sent")
-                    await bot.change_presence(activity=discord.Streaming(name="DM {sent_count}/{total_members}", url="https://www.twitch.tv/dxv3"))
 
                     await asyncio.sleep(delay_between_messages)
                 except discord.errors.Forbidden:
