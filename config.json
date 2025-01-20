@@ -1,4 +1,5 @@
 {
-    "BOT_TOKEN": "",
-    "WHITELISTED_IDS": []
+    "BOT_TOKEN": "bot_token",
+    "WHITELISTED_IDS": [123],
+    "BLACKLISTED_IDS": [123]
 }
