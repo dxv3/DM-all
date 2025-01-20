@@ -65,11 +65,11 @@ async def dmall(ctx, *, message):
     else:
         await ctx.send(r"you can't use this cmd! :(")
 
-@bot.command(name="customhelp")
-async def help_command(ctx):
+@bot.command(name="help")
+async def help(ctx):
     help_message = (
         "+dmall [message]: Sends a DM to all members of the server **(@dxv3 only >_<)**\n"
-        "+customhelp: Displays the list of available commands"
+        "should i add any more cmds>?? idk"
     )
     await ctx.send(help_message)
 
