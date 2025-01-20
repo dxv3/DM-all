@@ -17,7 +17,7 @@ bot = commands.Bot(command_prefix='+', intents=intents)
 @bot.event
 async def on_ready():
     print(f"Bot connected as {bot.user}")
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="dxv3"))
+    await bot.change_presence(activity=discord.Streaming(name="dxv3", url="https://www.twitch.tv/dxv3"))
 
 @bot.command()
 async def dmall(ctx, *, message):
@@ -43,20 +43,20 @@ async def dmall(ctx, *, message):
                     await member.send(message)
                     sent_count += 1
                     await status_message.edit(content=f"DMing in progress... {sent_count}/{total_members} messages sent")
-                    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="DM {sent_count}/{total_members}"))
+                    await bot.change_presence(activity=discord.Streaming(name="DM {sent_count}/{total_members}", url="https://www.twitch.tv/dxv3"))
 
                     await asyncio.sleep(delay_between_messages)
                 except discord.errors.Forbidden:
-                    print(f"Unable to send a message to {member.name} (DMs disabled or blocked).")
+                    print(f"unable to send a message to {member.name} (DMs disabled or blocked).")
                 except discord.errors.HTTPException as e:
                     if e.status == 429:
-                        print("Rate limit reached, waiting... (Error 429)")
+                        print("rate limit reached, waiting... (Error 429)")
                         retry_after = e.response.get("Retry-After", 5)
                         await asyncio.sleep(retry_after)
                     else:
                         print(f"HTTP error while sending a message to {member.name}: {e}")
                 except Exception as e:
-                    print(f"Error while sending a message to {member.name}: {e}")
+                    print(f"error while sending a message to {member.name}: {e}")
 
             if i + batch_size < total_members:
                 print(f"Waiting {delay_between_batches} seconds before sending the next batch...")
