@@ -8,7 +8,6 @@ with open("config.json", "r") as config_file:
 
 BOT_TOKEN = config["BOT_TOKEN"]
 WHITELISTED_IDS = config["WHITELISTED_IDS"]
-BLACKLISTED_IDS = config["BLACKLISTED_IDS"]
 
 intents = discord.Intents.all()
 intents.members = True
@@ -22,11 +21,7 @@ async def on_ready():
 @bot.command()
 async def dmall(ctx, *, message):
     if ctx.author.id in WHITELISTED_IDS:
-        # exclude bots and blacklisted ids
-        members_to_message = [
-            member for member in ctx.guild.members 
-            if not member.bot and member.id not in BLACKLISTED_IDS
-        ]
+        members_to_message = [member for member in ctx.guild.members if not member.bot]
         total_members = len(members_to_message)
         batch_size = 10
         delay_between_batches = 10
@@ -68,7 +63,7 @@ async def dmall(ctx, *, message):
 @bot.command(name="help")
 async def help(ctx):
     help_message = (
-        "+dmall [message]: Sends a DM to all members of the server **(@dxv3 only >_<)**\n"
+        "+dmall [message]: Sends a DM to all members of the server\n"
         "should i add any more cmds>?? idk"
     )
     await ctx.send(help_message)
