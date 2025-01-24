@@ -29,6 +29,7 @@ async def dmall(ctx, *, message):
 
         status_message = await ctx.send(f"Started DMing!!! 0/{total_members} messages sent")
         sent_count = 0
+        failed = 0
 
         for i in range(0, total_members, batch_size):
             batch = members_to_message[i:i+batch_size]
@@ -37,11 +38,12 @@ async def dmall(ctx, *, message):
                 try:
                     await member.send(message)
                     sent_count += 1
-                    await status_message.edit(content=f"DMing in progress... {sent_count}/{total_members} messages sent")
+                    await status_message.edit(content=f"DMing in progress... {sent_count}/{total_members} messages sent, {failed} failed (msgs disabled)")
 
                     await asyncio.sleep(delay_between_messages)
                 except discord.errors.Forbidden:
                     print(f"unable to send a message to {member.name} (DMs disabled or blocked).")
+                    failed += 1
                 except discord.errors.HTTPException as e:
                     if e.status == 429:
                         print("rate limit reached, waiting... (Error 429)")
@@ -56,7 +58,8 @@ async def dmall(ctx, *, message):
                 print(f"Waiting {delay_between_batches} seconds before sending the next batch...")
                 await asyncio.sleep(delay_between_batches)
 
-        await status_message.edit(content=f"DM process completed! {sent_count}/{total_members} messages sent")
+        await status_message.edit(content=f"DM process completed! {sent_count}/{total_members} messages sent, {failed} failed (msgs disabled)")
+
     else:
         await ctx.send(r"you can't use this cmd! :(")
 
