@@ -8,6 +8,8 @@ with open("config.json", "r") as config_file:
 
 BOT_TOKEN = config["BOT_TOKEN"]
 WHITELISTED_IDS = config["WHITELISTED_IDS"]
+cancel_event = asyncio.Event()
+
 
 intents = discord.Intents.all()
 intents.members = True
@@ -19,8 +21,17 @@ async def on_ready():
     await bot.change_presence(activity=discord.Streaming(name="dxv3", url="https://www.twitch.tv/dxv3"))
 
 @bot.command()
+async def cancel(ctx):
+    if ctx.author.id in WHITELISTED_IDS:
+        cancel_event.set()
+        await ctx.send("DMing cancelled")
+    else:
+        await ctx.send(r"you can't use this cmd! :(")
+
+@bot.command()
 async def dmall(ctx, *, message):
     if ctx.author.id in WHITELISTED_IDS:
+        cancel_event.clear()
         members_to_message = [member for member in ctx.guild.members if not member.bot]
         total_members = len(members_to_message)
         batch_size = 10
@@ -35,6 +46,9 @@ async def dmall(ctx, *, message):
             batch = members_to_message[i:i+batch_size]
 
             for member in batch:
+                if cancel_event.is_set():
+                    await status_message.edit(content=f"DMing cancelled, {sent_count}/{total_members} messages sent")
+                    return
                 try:
                     await member.send(message)
                     sent_count += 1
@@ -48,6 +62,7 @@ async def dmall(ctx, *, message):
                     if e.status == 429:
                         print("rate limit reached, waiting... (Error 429)")
                         retry_after = e.response.get("Retry-After", 5)
+                        delay_between_messages += 1  # increase delay dynamically
                         await asyncio.sleep(retry_after)
                     else:
                         print(f"HTTP error while sending a message to {member.name}: {e}")
@@ -67,7 +82,7 @@ async def dmall(ctx, *, message):
 async def help(ctx):
     help_message = (
         "+dmall [message]: Sends a DM to all members of the server\n"
-        "should i add any more cmds>?? idk"
+        "+cancel: Cancels DMing process"
     )
     await ctx.send(help_message)
 
