@@ -1,6 +1,6 @@
 # Discord Bot with DM All Command
 
-## Prerequisites
+## Setup Info
 
 If you get the error message `No module named 'audioop'` then `pip install audioop-lts`
 
