@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import asyncio
 import json
+import time
 
 with open("config.json", "r") as config_file:
     config = json.load(config_file)
@@ -37,6 +38,7 @@ async def dmall(ctx, *, message):
         batch_size = 10
         delay_between_batches = 10
         delay_between_messages = 1 # make higher if shit but 1 works for servers under 200 members
+        start_time = time.time()
 
         status_message = await ctx.send(f"Started DMing!!! 0/{total_members} messages sent")
         sent_count = 0
@@ -49,7 +51,8 @@ async def dmall(ctx, *, message):
 
             for member in batch:
                 if cancel_event.is_set():
-                    await status_message.edit(content=f"DMing cancelled, {sent_count}/{total_members} messages sent")
+                    elapsed_time = time.time() - start_time
+                    await status_message.edit(content=f"DMing cancelled, {sent_count}/{total_members} messages sent in {elapsed_time:.2f} seconds.")
                     return
                 try:
                     await member.send(message)
@@ -76,7 +79,8 @@ async def dmall(ctx, *, message):
                 print(f"Waiting {delay_between_batches} seconds before sending the next batch...")
                 await asyncio.sleep(delay_between_batches)
 
-        await status_message.edit(content=f"DM process completed! {sent_count}/{total_members} messages sent, {failed} failed (msgs disabled)")
+        elapsed_time = time.time() - start_time
+        await status_message.edit(content=f"DM process completed! {sent_count}/{total_members} messages sent, {failed} failed in {elapsed_time:.2f} seconds.")
 
     else:
         await ctx.send(r"you can't use this cmd! :(")
@@ -134,6 +138,9 @@ async def dmallembed(ctx):
             color=color
         )
 
+        start_time = time.time()
+
+
         status_message = await ctx.send(f"Started DMing embed!!! 0/{total_members} messages sent")
         sent_count = 0
         failed = 0
@@ -143,7 +150,8 @@ async def dmallembed(ctx):
 
             for member in batch:
                 if cancel_event.is_set():
-                    await status_message.edit(content=f"DMing cancelled, {sent_count}/{total_members} messages sent")
+                    elapsed_time = time.time() - start_time
+                    await status_message.edit(content=f"DMing cancelled, {sent_count}/{total_members} messages sent in {elapsed_time:.2f} seconds.")
                     return
                 try:
                     await member.send(embed=embed)
@@ -168,7 +176,8 @@ async def dmallembed(ctx):
                 print(f"Waiting {delay_between_batches} seconds before sending the next batch...")
                 await asyncio.sleep(delay_between_batches)
 
-        await status_message.edit(content=f"DM embed process completed! {sent_count}/{total_members} messages sent, {failed} failed (msgs disabled)")
+        elapsed_time = time.time() - start_time
+        await status_message.edit(content=f"DM embed process completed! {sent_count}/{total_members} messages sent, {failed} failed in {elapsed_time:.2f} seconds.")
 
     else:
         await ctx.send(r"you can't use this cmd! :(")
