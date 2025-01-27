@@ -26,6 +26,8 @@ async def cancel(ctx):
     if ctx.author.id in WHITELISTED_IDS:
         cancel_event.set()
         await ctx.send("DMing cancelled")
+        print("DMing cancelled")
+
     else:
         await ctx.send(r"you can't use this cmd! :(")
 
