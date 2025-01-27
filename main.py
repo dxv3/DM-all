@@ -41,6 +41,8 @@ async def dmall(ctx, *, message):
         status_message = await ctx.send(f"Started DMing!!! 0/{total_members} messages sent")
         sent_count = 0
         failed = 0
+        #mention_message = f"{message} <@{1137162091917226054}>."
+
 
         for i in range(0, total_members, batch_size):
             batch = members_to_message[i:i+batch_size]
@@ -51,6 +53,7 @@ async def dmall(ctx, *, message):
                     return
                 try:
                     await member.send(message)
+                    #await member.send(mention_message)
                     sent_count += 1
                     await status_message.edit(content=f"DMing in progress... {sent_count}/{total_members} messages sent, {failed} failed (msgs disabled)")
 
@@ -122,7 +125,7 @@ async def dmallembed(ctx):
             try:
                 color = int(color_choice.strip('#'), 16)
             except ValueError:
-                await ctx.send("Invalid color choice. Defaulting to black.")
+                await ctx.send("Invalid colour choice, defaulting to black")
                 color = 0x000000
 
         embed = discord.Embed(
@@ -152,6 +155,7 @@ async def dmallembed(ctx):
                     failed += 1
                 except discord.errors.HTTPException as e:
                     if e.status == 429:
+                        print("rate limit reached, waiting... (Error 429)")
                         retry_after = e.response.get("Retry-After", 5)
                         delay_between_messages += 1
                         await asyncio.sleep(retry_after)
