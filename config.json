@@ -1,4 +1,4 @@
 {
     "BOT_TOKEN": "bot_token",
-    "WHITELISTED_IDS": [123]
+    "WHITELISTED_IDS": [your_discord_id]
 }
